@@ -1,11 +1,8 @@
-import { useContext } from 'react';
 import { Container, Row, Col, Button, Card, ListGroup, Table, Alert } from 'react-bootstrap';
-import { CartContext } from '../context/CartContext';
-import { PizzaContext } from '../context/PizzaContext';
+import usePizzaCart from '../hooks/usePizzaCart';
 
 const Cart = () => {
-    const { cart, increaseQuantity, decreaseQuantity, calculateTotal } = useContext(CartContext);
-    const { pizzas } = useContext(PizzaContext);
+    const { cart, pizzas, increaseQuantity, decreaseQuantity, calculateTotal } = usePizzaCart();
 
     const getPizzaDetails = (pizzaId) => {
         return pizzas.find(pizza => pizza.id === pizzaId);

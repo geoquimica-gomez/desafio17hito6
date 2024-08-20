@@ -1,9 +1,5 @@
-import Container from 'react-bootstrap/Container';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-import Image from 'react-bootstrap/Image';
+import { Container, Nav, Navbar, Image, Tooltip } from 'react-bootstrap';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import Tooltip from 'react-bootstrap/Tooltip';
 import { Link } from "react-router-dom";
 import { useContext } from 'react';
 import { CartContext } from '../context/CartContext';

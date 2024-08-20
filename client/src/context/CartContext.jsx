@@ -14,7 +14,7 @@ export const CartProvider = ({ children }) => {
                 newCart[pizzaIndex].quantity += 1;
                 return newCart;
             } else {
-                return [...prevCart, { ...pizza, quantity: 1 }]; // Inicializar quantity a 1
+                return [...prevCart, { ...pizza, quantity: 1 }];
             }
         });
     }, []);

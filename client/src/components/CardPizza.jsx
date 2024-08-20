@@ -1,12 +1,12 @@
 import { Link } from 'react-router-dom';
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Button, Container, Alert } from 'react-bootstrap';
-import { CartContext } from '../context/CartContext';
+import usePizzaCart from '../hooks/usePizzaCart';
 
 const CardPizza = ({ id, name, price, ingredients, img }) => {
     const [showNotification, setShowNotification] = useState(false);
-    const { addToCart } = useContext(CartContext);
+    const { addToCart } = usePizzaCart();
 
     const handleAddPizza = () => {
         const pizza = {

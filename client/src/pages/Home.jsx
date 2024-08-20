@@ -1,14 +1,11 @@
-import { useContext } from 'react';
 import Header from '../components/Header';
 import CardPizza from '../components/CardPizza';
 import { Container, Row, Col, Spinner, Alert } from 'react-bootstrap';
-import { PizzaContext } from '../context/PizzaContext';
-import { CartContext } from '../context/CartContext';
+import usePizzaCart from '../hooks/usePizzaCart';
 
 const Home = () => {
-    const { pizzas, loading, error } = useContext(PizzaContext);
-    const { addToCart } = useContext(CartContext);
-
+    const { pizzas, loading, error, addToCart } = usePizzaCart();
+    
     if (loading) {
         return (
             <Container className="mt-4 text-center">

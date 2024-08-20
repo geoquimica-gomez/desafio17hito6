@@ -1,29 +1,19 @@
-import  { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Container, Row, Col, Card, Spinner, Alert, Button } from 'react-bootstrap';
-import { PizzaContext } from '../context/PizzaContext';
-import { CartContext } from '../context/CartContext';
+import usePizzaCart from '../hooks/usePizzaCart';
 
 const Pizza = () => {
     const { id } = useParams();
-    const { getPizzaById, loading: pizzaLoading, error: pizzaError } = useContext(PizzaContext);
-    const { addToCart } = useContext(CartContext);
+    const { getPizzaById, loading, error, addToCart } = usePizzaCart();
     const [pizza, setPizza] = useState(null);
-    const [loading, setLoading] = useState(true);
     const [showNotification, setShowNotification] = useState(false);
     const NOTIFICATION_TIMEOUT = 3000;
 
     useEffect(() => {
         const fetchPizza = async () => {
-            setLoading(true);
-            try {
-                const pizzaData = await getPizzaById(id);
-                setPizza(pizzaData);
-                setLoading(false);
-            } catch (error) {
-                console.error(error);
-                setLoading(false);
-            }
+            const pizzaData = await getPizzaById(id);
+            setPizza(pizzaData);
         };
 
         fetchPizza();
@@ -43,7 +33,7 @@ const Pizza = () => {
         }
     };
 
-    if (loading || pizzaLoading) {
+    if (loading) {
         return (
             <Container className="mt-4 text-center">
                 <Spinner animation="border">
@@ -53,10 +43,10 @@ const Pizza = () => {
         );
     }
 
-    if (pizzaError) {
+    if (error) {
         return (
             <Container className="mt-4">
-                <Alert variant="danger">{pizzaError}</Alert>
+                <Alert variant="danger">{error}</Alert>
             </Container>
         );
     }
