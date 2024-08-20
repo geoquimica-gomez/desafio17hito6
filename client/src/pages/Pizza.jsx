@@ -1,28 +1,27 @@
+import  { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Spinner, Alert, Button } from 'react-bootstrap';
+import { PizzaContext } from '../context/PizzaContext';
+import { CartContext } from '../context/CartContext';
 
 const Pizza = () => {
     const { id } = useParams();
+    const { getPizzaById, loading: pizzaLoading, error: pizzaError } = useContext(PizzaContext);
+    const { addToCart } = useContext(CartContext);
     const [pizza, setPizza] = useState(null);
-    const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
     const [showNotification, setShowNotification] = useState(false);
     const NOTIFICATION_TIMEOUT = 3000;
 
     useEffect(() => {
         const fetchPizza = async () => {
+            setLoading(true);
             try {
-                const response = await fetch(`http://localhost:5000/api/pizzas/${id}`);
-                if (!response.ok) {
-                    throw new Error('Error al obtener los datos de la pizza');
-                }
-                const data = await response.json();
-                setPizza(data);
-                setError(null);
+                const pizzaData = await getPizzaById(id);
+                setPizza(pizzaData);
+                setLoading(false);
             } catch (error) {
-                setError(error.message);
-            } finally {
+                console.error(error);
                 setLoading(false);
             }
         };
@@ -35,13 +34,16 @@ const Pizza = () => {
             }, NOTIFICATION_TIMEOUT);
             return () => clearTimeout(timer);
         }
-    }, [id, showNotification]);
+    }, [id, getPizzaById, showNotification]);
 
     const handleAddPizza = () => {
-        setShowNotification(true);
+        if (pizza) {
+            addToCart(pizza);
+            setShowNotification(true);
+        }
     };
 
-    if (loading) {
+    if (loading || pizzaLoading) {
         return (
             <Container className="mt-4 text-center">
                 <Spinner animation="border">
@@ -51,10 +53,18 @@ const Pizza = () => {
         );
     }
 
-    if (error) {
+    if (pizzaError) {
         return (
             <Container className="mt-4">
-                <Alert variant="danger">{error}</Alert>
+                <Alert variant="danger">{pizzaError}</Alert>
+            </Container>
+        );
+    }
+
+    if (!pizza) {
+        return (
+            <Container className="mt-4">
+                <Alert variant="warning">No se encontró la pizza.</Alert>
             </Container>
         );
     }
@@ -83,7 +93,7 @@ const Pizza = () => {
                                     <Card.Text>
                                         <strong>Precio:</strong> {pizza.price.toLocaleString('es-CL', { style: 'currency', currency: 'CLP' })}
                                     </Card.Text>
-                                    <Button className='btnAddPizza' onClick={handleAddPizza}> Añadir al 🛒</Button>
+                                    <Button className='btnAddPizza' onClick={handleAddPizza}>Añadir al 🛒</Button>
 
                                     {showNotification && (
                                         <Alert variant="success" className="mt-3">
@@ -101,4 +111,3 @@ const Pizza = () => {
 };
 
 export default Pizza;
-

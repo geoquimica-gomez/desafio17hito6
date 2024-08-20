@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect, useMemo } from 'react';
+import { createContext, useState, useEffect, useMemo, useCallback } from 'react';
 import PropTypes from 'prop-types';
 
 export const PizzaContext = createContext();
@@ -33,7 +33,24 @@ export const PizzaProvider = ({ children }) => {
         }
     };
 
-    const contextValue = useMemo(() => ({ pizzas, loading, error }), [pizzas, loading, error]);
+    const getPizzaById = useCallback(async (id) => {
+        setLoading(true);
+        try {
+            const response = await fetch(`http://localhost:5000/api/pizzas/${id}`);
+            if (!response.ok) {
+                throw new Error('Error al obtener los datos de la pizza');
+            }
+            const pizza = await response.json();
+            return pizza;
+        } catch (error) {
+            setError(error.message);
+            return null;
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
+    const contextValue = useMemo(() => ({ pizzas, loading, error, getPizzaById }), [pizzas, loading, error, getPizzaById]);
 
     return (
         <PizzaContext.Provider value={contextValue}>

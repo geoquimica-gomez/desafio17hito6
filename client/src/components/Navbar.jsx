@@ -5,11 +5,11 @@ import Image from 'react-bootstrap/Image';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { Link } from "react-router-dom";
-import { useContext } from 'react'; // Importa useContext
-import { CartContext } from '../context/CartContext'; // Importa el contexto directamente
+import { useContext } from 'react';
+import { CartContext } from '../context/CartContext';
 
 const NavbarApp = () => {
-    const { calculateTotal } = useContext(CartContext); // Accede a calculateTotal desde el contexto
+    const { calculateTotal } = useContext(CartContext);
     const token = false;
 
     return (

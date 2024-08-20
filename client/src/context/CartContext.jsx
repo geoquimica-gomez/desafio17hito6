@@ -7,9 +7,17 @@ export const CartProvider = ({ children }) => {
     const [cart, setCart] = useState([]);
 
     const addToCart = useCallback((pizza) => {
-        setCart((prevCart) => [...prevCart, pizza]);
+        setCart((prevCart) => {
+            const pizzaIndex = prevCart.findIndex(item => item.id === pizza.id);
+            if (pizzaIndex !== -1) {
+                const newCart = [...prevCart];
+                newCart[pizzaIndex].quantity += 1;
+                return newCart;
+            } else {
+                return [...prevCart, { ...pizza, quantity: 1 }]; // Inicializar quantity a 1
+            }
+        });
     }, []);
-
     const increaseQuantity = useCallback((index) => {
         setCart((prevCart) => {
             const newCart = [...prevCart];
