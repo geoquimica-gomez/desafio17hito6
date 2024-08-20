@@ -5,16 +5,17 @@ import Image from 'react-bootstrap/Image';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { Link } from "react-router-dom";
-
+import { useContext } from 'react'; // Importa useContext
+import { CartContext } from '../context/CartContext'; // Importa el contexto directamente
 
 const NavbarApp = () => {
-    const total = 25000;
+    const { calculateTotal } = useContext(CartContext); // Accede a calculateTotal desde el contexto
     const token = false;
 
     return (
         <Navbar collapseOnSelect expand="lg" className="custom-navbar" sticky="top">
             <Container>
-                <Navbar.Brand  className="text-white">
+                <Navbar.Brand className="text-white">
                     <Image className='logo' src="https://static.vecteezy.com/system/resources/previews/036/485/265/original/kawaii-pizza-slice-cartoon-character-flat-design-png.png" />
                     Pizzería delicias de Alondra!
                 </Navbar.Brand>
@@ -57,19 +58,15 @@ const NavbarApp = () => {
                                 <Link to="/register" className='btn1'>🔐Register</Link>
                             </OverlayTrigger>
                         )}
-                        <OverlayTrigger
-                            placement="bottom"
-                            overlay={<Tooltip id="tooltip-home">Visita tu perfil</Tooltip>}
-                        >
-                            <Link to="/profile" className='btn1'>🔓Profile</Link>
-                        </OverlayTrigger>
                     </Nav>
                     <Nav>
                         <OverlayTrigger
                             placement="bottom"
                             overlay={<Tooltip id="tooltip-cart">Ver carrito de compras</Tooltip>}
                         >
-                            <Link to="/cartShooping" className='btn2'>🛒Total: {total.toLocaleString()} $</Link>
+                            <Link to="/cartShooping" className='btn2'>
+                                🛒Total: {calculateTotal.toLocaleString('es-CL', { style: 'currency', currency: 'CLP' })}
+                            </Link>
                         </OverlayTrigger>
                     </Nav>
                 </Navbar.Collapse>

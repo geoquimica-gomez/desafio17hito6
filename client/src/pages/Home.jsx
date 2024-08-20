@@ -1,37 +1,13 @@
-import { useState, useEffect } from "react";
+import { useContext } from 'react';
 import Header from '../components/Header';
 import CardPizza from '../components/CardPizza';
 import { Container, Row, Col, Spinner, Alert } from 'react-bootstrap';
+import { PizzaContext } from '../context/PizzaContext';
+import { CartContext } from '../context/CartContext';
 
 const Home = () => {
-    const [pizzas, setPizzas] = useState([]);
-    const [error, setError] = useState(null);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        consultarApi();
-    }, []);
-
-    const consultarApi = async () => {
-        try {
-            setLoading(true);
-            const url = "http://localhost:5000/api/pizzas";
-            const response = await fetch(url);
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const data = await response.json();
-            setPizzas(data);
-            setError(null);
-        } catch (error) {
-            setError(`Error al obtener los datos: ${error.message}`);
-            console.error("Error al obtener los datos:", error);
-        } finally {
-            setLoading(false);
-        }
-    };
+    const { pizzas, loading, error } = useContext(PizzaContext);
+    const { addToCart } = useContext(CartContext);
 
     if (loading) {
         return (
@@ -64,6 +40,7 @@ const Home = () => {
                                 price={pizza.price}
                                 ingredients={pizza.ingredients}
                                 img={pizza.img}
+                                addToCart={() => addToCart({ ...pizza, quantity: 1 })}
                             />
                         </Col>
                     ))}
@@ -74,3 +51,4 @@ const Home = () => {
 }
 
 export default Home;
+
